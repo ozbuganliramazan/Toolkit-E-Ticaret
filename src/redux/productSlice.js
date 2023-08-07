@@ -17,11 +17,24 @@ export const getProducts = createAsyncThunk('getProducts', async()=>{
     return data
 })
 
+export const getCategoryProduct = createAsyncThunk('getCategoryProduct', async(category)=>{
+    const response = await fetch(`https://fakestoreapi.com/products/category/${category}`)
+    const data = await response.json();
+    return data
+})
+
+
+
+
+
+
 export const getDetailProduct = createAsyncThunk('getDetailProduct', async(id)=>{
     const response = await fetch(`https://fakestoreapi.com/products/${id}`)
     const data = await response.json();
     return data
 })
+
+
 
 
 
@@ -57,6 +70,23 @@ extraReducers: (builder)=>{
         state.ProductDetailStatus = STATUS.FAIL
 
     })
+
+
+
+    .addCase(getCategoryProduct.pending,(state)=>{
+        state.productsStatus = STATUS.LOADING
+
+    })
+    .addCase(getCategoryProduct.fulfilled,(state,action)=>{
+        state.productsStatus = STATUS.SUCCESS;
+        state.products = action.payload
+    })
+    .addCase(getCategoryProduct.rejected,(state)=>{
+        state.productsStatus = STATUS.FAIL
+
+    })
+
+
 
 }
 

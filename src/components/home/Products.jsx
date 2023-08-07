@@ -1,12 +1,12 @@
 import { useEffect ,useState} from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { getProducts } from "../../redux/productSlice";
+import { getProducts ,getCategoryProduct} from "../../redux/productSlice";
 import Loding from "../Loding";
 import ProductList from "./ProductList";
 import ReactPaginate from 'react-paginate';
 
 
-const Products = () => {
+const Products = ({category, sort}) => {
 
 
   const dispatch = useDispatch();
@@ -32,21 +32,15 @@ const itemsPerPage =6;
   };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 useEffect(()=>{
-  dispatch(getProducts())
-},[dispatch])
+  if(category){
+    dispatch(getCategoryProduct(category))
+  }else{
+    dispatch(getProducts())
+  }
+  
+},[dispatch,category])
+
 
   return (
     <div>
@@ -55,7 +49,7 @@ useEffect(()=>{
         <>
          <div className="flex flex-wrap">
           {
-           currentItems?.map((product,i)=>(
+           currentItems?.sort((a,b)=> sort == "inc" ? a.price - b.price : sort == "dec" ? b.price - a.price : null)?.map((product,i)=>(
               <ProductList key={i} product={product} />
             ))
           }
